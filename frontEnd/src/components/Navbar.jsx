@@ -11,21 +11,21 @@ const  Navbar = () => {
         
         <img src={assets.logo} className='w-36 ' alt="" />
 
-        <ul className='hidden sm:flex  gap-5 text-sm border-b'>
+        <ul className='hidden sm:flex  gap-5 text-sm md:text-base border-b'>
             <NavLink to='/'>
                 <p>Home</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
-            <NavLink to='/contact'>
-                <p>Contact</p>
+            <NavLink to='/collections'>
+                <p>Collections</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
             <NavLink to='/about'>
                 <p>About</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
-            <NavLink to='/products'>
-                <p>Products</p>
+            <NavLink to='/contact'>
+                <p>Contact</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
         </ul>
@@ -44,7 +44,7 @@ const  Navbar = () => {
             </div>
             <Link to='/cart' className='relative'>
             <img src={assets.cart_icon}  className='w-5 min-w-3' alt="" />
-                <p className='absolute right-[-3px] bottom-[-3px] w-3 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>
+                <p className='absolute right-[-3px] bottom-[-3px] w-6/12 sm:w-4  text-center leading-relaxed sm:leading-4 bg-black text-white aspect-square rounded-full text-[4px] sm:text-[8px]'>
                     10
                 </p> 
             </Link>
