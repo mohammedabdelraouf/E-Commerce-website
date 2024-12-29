@@ -5,7 +5,7 @@ import ProductItem from '../components/ProductItem';
 import { assets } from '../assets/assets';
 
 function Collection() {
-  const { products } = useContext(ShopContext);
+  const { products , search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
@@ -34,6 +34,9 @@ function Collection() {
     let filtered = products.slice();
 
     // Apply category filter
+    if (showSearch && search) {
+      filtered = filtered.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
+    }
     if (category.length > 0) {
       filtered = filtered.filter((item) => category.includes(item.category));
     }
@@ -57,7 +60,7 @@ function Collection() {
   // Reapply filters and sorting when any dependency changes
   useEffect(() => {
     applyFilterAndSort();
-  }, [category, subCategory, sortType,products]);
+  }, [category, subCategory, sortType, search ,products]);
 
   return (
     <div className='flex flex-col md:flex-row sm:gap-10 pt-10 border-t gap-1'>

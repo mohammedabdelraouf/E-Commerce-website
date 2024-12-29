@@ -12,11 +12,13 @@ import About from './pages/About'
 import Collection from './pages/Collection'
 import Navbar from './components/navBar'
 import Footer from './components/Footer'
+import SearchBar from './components/SearchBar'
 
 const App = () => {
   return (
     <div className='w-11/12 lg:w-9/12  m-auto'>
-      <Navbar></Navbar>
+      <Navbar/>
+      <SearchBar/>
       <Routes>
       <Route path='/' element={<Home />} />
         <Route path='/collection' element={<Collection />} />
