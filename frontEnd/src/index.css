@@ -13,6 +13,11 @@
 a.active hr{
     display: block;
 }
+
+.side-menue a.active{
+    background-color: black;
+    color: white;
+}
 .prata-regular {
     font-family: "Prata", serif;
     font-weight: 400;

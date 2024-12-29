@@ -9,14 +9,14 @@ const  Navbar = () => {
     
     <div className='w-full flex items-center justify-between py-5 px-5 font-medium'>
         
-        <img src={assets.logo} className='w-36 ' alt="" />
+        <Link className='cursor-pointer' to='/'><img src={assets.logo} className='w-36 ' alt="" /></Link>
 
         <ul className='hidden sm:flex  gap-5 text-sm md:text-base border-b'>
             <NavLink to='/'>
                 <p>Home</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
-            <NavLink to='/collections'>
+            <NavLink to='/collection'>
                 <p>Collections</p>
                 <hr className='border-red-950  border-2 hidden'/>
             </NavLink>
@@ -52,7 +52,7 @@ const  Navbar = () => {
 
         </div> 
         {/* side bar menue for small screen*/}
-        <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible? 'w-11/12 shadow-lg' : 'w-0'}`}>
+        <div className={`side-menue absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible? 'w-11/12 shadow-lg' : 'w-0'}`}>
             <div className="flex flex-col text-gray-600">
                 <div onClick={()=>{setVisible(false)}} className="flex items-center gap-4 p-3 cursor-pointer">
                     <img  src={assets.dropdown_icon} className='w-2 m-5 me-0 rotate-180 ' alt="" />
