@@ -35,7 +35,7 @@ const Footer = () => {
                 <h2 className='text-xl font-medium mb-5'>Get in touch </h2>
                 <ul className='flex flex-col gap-y-1 text-gray-600'>
                     <p>+201557643211</p>
-                    <p>m.abdelraouf1010@gmail.com</p>
+                    <p><a href="mailto:m.abdelraouf1010@gmail.com">m.abdelraouf1010@gmail.com</a> </p>
                 </ul>
             </div>
         </div>

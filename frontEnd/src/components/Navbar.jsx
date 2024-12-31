@@ -14,7 +14,7 @@ const  Navbar = () => {
         
         <Link className='cursor-pointer' to='/'><img src={assets.logo} className='w-36 ' alt="" /></Link>
 
-        <ul className='hidden sm:flex  gap-5 text-sm md:text-base border-b'>
+        <ul className='hidden sm:flex  gap-5 text-sm md:text-base lg:text-lg border-b'>
             <NavLink to='/'>
                 <p>Home</p>
                 <hr className='border-red-950  border-2 hidden'/>
