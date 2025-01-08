@@ -3,13 +3,14 @@ import { useParams } from 'react-router-dom'
 import {ShopContext} from '../context/ShopContext'
 import { assets } from '../assets/assets';
 import RealatedProducts from '../components/RealatedProducts';
+import { toast } from 'react-toastify';
 
 const Product = () => {
     const {productId} = useParams();
     const {products , currency, addToCart } = useContext(ShopContext);
     const [productData, setProductData] = useState(false);
     const [img, setImg] = useState('')
-    const [size, setSize] = useState('M')
+    const [size, setSize] = useState('')
     const [swapTaps, setSwap]  =useState(true)
 
     const fetchProductData = async ()=>{
@@ -24,7 +25,15 @@ const Product = () => {
       fetchProductData();
     },[productId])
     
-    
+    const handelAddToCart = (itemId , size)=>{
+      if (size == '') {
+        toast.warning("please select size" ,{autoClose:1000 , position:'top-right'});
+      }
+      else{
+        addToCart(itemId, size);
+      }
+
+    }
   return productData ? (
     <div className='border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100' >
       {/* product data section */}
@@ -71,7 +80,7 @@ const Product = () => {
                 ))
               }
             </div>
-            <button onClick={()=>addToCart(productData._id, size)} className='bg-black text-white py-3 w-[40%] hover:bg-gray-800'>
+            <button onClick={()=>handelAddToCart(productData._id, size)} className=' active:bg-gray-800 bg-black text-white py-3 w-[40%] '>
               Add To Cart
             </button>
           </div>

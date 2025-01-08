@@ -13,7 +13,6 @@ const RealatedProducts = ({category, subCategory ,id}) => {
       }
     const getRealted= ()=>{
         let temp = products.filter((item)=> item.category == category && item.subCategory == subCategory && item._id !== id)
-        console.log(temp);
         shuffle(temp);
         setRealted(temp.slice(0,5));
     }
