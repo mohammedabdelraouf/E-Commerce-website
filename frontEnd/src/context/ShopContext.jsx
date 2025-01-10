@@ -7,7 +7,12 @@ const ShopContextProvidor = (props)=>{
     const deliveryFee= 10 ;
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);
-    const [cartItems, setCartItems] =useState({});
+    const [cartItems, setCartItems] =useState(()=>{
+        const saved = localStorage.getItem("cartItems");
+        const initialValue = JSON.parse(saved);
+        return initialValue || {};
+
+    });
     const [totalPrice, setTotalPrice] = useState(0); 
 
     //  cart manging functions
@@ -120,6 +125,14 @@ const ShopContextProvidor = (props)=>{
 
 
     // ********************************************************************************************************//
+    // handle local sorage
+    useEffect(() => {
+        // storing input name
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      }, [cartItems]);
+
+
+    // -**************************************************************************************************//
     const value={
         products, currency,deliveryFee, 
         search , setSearch, showSearch , setShowSearch
