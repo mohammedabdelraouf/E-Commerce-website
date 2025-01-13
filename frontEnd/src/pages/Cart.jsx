@@ -41,7 +41,7 @@ function cart() {
       </div>
 
        <div className="flex justify-end my-10">
-          <div className="w-full sm:w-1/2  shadow-[0px_2px_20px_5px] shadow-gray-300">
+          <div className="w-full sm:w-1/2  shadow-[0px_2px_20px_5px] shadow-gray-300 px-5">
             <CartTotal  />
             <div className='w-full text-end px-5'>
                 <button onClick={()=>navigate('/place-order')} className='bg-black active:bg-gray-700 text-white cursor-pointer px-6 py-1 mt-4 mb-2 '>

@@ -8,7 +8,7 @@ const CartTotal = () => {
         clacPrice();
     }, [cartItems])
   return (
-    <div className='w-full  px-5 pt-2 my-2'>
+    <div className='w-full  pt-2 my-2'>
         <div className='text-lg md:text-xl'>
             <Title text1={"CART"} text2={'TOTAL'}/>
         </div>

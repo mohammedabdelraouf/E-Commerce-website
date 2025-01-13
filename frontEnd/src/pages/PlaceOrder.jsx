@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { assets } from '../assets/assets'
+import { ShopContext } from '../context/ShopContext';
 function placeOrder() {
- const [payMethod , setPayMethod] = useState('');
+ const [payMethod , setPayMethod] = useState('cash');
+ const {navigate} = useContext(ShopContext);
 
   return (
     <div className='flex flex-col min-[700px]:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t'>
        {/* Left side */}
-        <div className="flex flex-col gap-4 w-full  sm:max-w-[450px] m-auto">
+        <section className="flex flex-col gap-4 w-full  sm:max-w-[450px] m-auto">
             <div className="text-xl sm:text-2xl my-3">
               <Title text1={'DELIVERY'} text2={'INFORMATION'} />
             </div>
@@ -29,10 +31,10 @@ function placeOrder() {
             <input type="number" placeholder='Phone' className='border border-gray-300 rounded py-1.5 px-3.5 w-full ' />
 
 
-        </div>
+        </section>
         {/* right side */}
-        <div className='mt-8' > 
-          <div className='mt-8 min-w-80  ms-auto shadow-[0px_0px_10px_0px] shadow-gray-100'>
+        <section className='mt-8' > 
+          <div className='mt-8 min-w-80  ms-0 '>
             <CartTotal/>
           </div>
           {/* payment method */}
@@ -53,7 +55,10 @@ function placeOrder() {
                 </div>
             </div>
           </div>
-        </div>
+          <div className="w-full text-end mt-2">
+            <button onClick={()=>navigate('/orders')} className='w-1/2 px-3 py-2 bg-black text-white' >Place Order</button>
+          </div>
+        </section>
     </div>
   )
 }
