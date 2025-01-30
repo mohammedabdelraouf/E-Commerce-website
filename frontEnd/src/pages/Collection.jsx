@@ -110,9 +110,9 @@ function Collection() {
       {/* ************************************************************************************************************* */}
       {/* Right side of page that contains products */}
       <div className="m-auto w-full md:w-9/12">
-        <div className="flex justify-between text-base sm:text-xl mb-4">
+        <div className="flex flex-col sm:flex-row gap-2 justify-between text-base sm:text-xl mb-4">
           <Title text1="ALL" text2="COLLECTIONS" />
-          <select onChange={(e) => setSortType(e.target.value)} className="border border-gray-300 text-sm px-2">
+          <select onChange={(e) => setSortType(e.target.value)} className="border w-36 border-gray-300 text-sm px-2 py-3 sm:py-0 ">
             <option value="relavent">Sort by: Relevant</option>
             <option value="low-high">Sort by: Low to High</option>
             <option value="high-low">Sort by: High to Low</option>

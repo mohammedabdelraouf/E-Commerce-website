@@ -6,7 +6,7 @@ const CartItem = ({itemId, itemName , itemImg, size , price ,quantity}) => {
 
   const {requestDeleteConfirmation ,updateNumberOfItems} = useContext(ShopContext);
   return (
-    <div className="grid grid-cols-[4fr_0.5fr_0.5fr]  sm:grid-cols-[4fr_2fr_0.5fr] border-b border-t justify-between py-1">
+    <div className="grid grid-cols-[4fr_0.5fr_0.5fr] gap-2  sm:grid-cols-[4fr_2fr_0.5fr] border-b border-t justify-between py-1">
       <div className='flex items-start  gap-6'> 
         <img className='w-16 sm:w-20' src={itemImg} alt=""/>
           <div>

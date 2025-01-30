@@ -31,7 +31,7 @@ function Orders() {
         cartData.map((item,index)=>{
           const productData = products.find((product)=>( product._id === item._id));
           return (
-              <div className="flex flex-col sm:flex-row justify-between border-t border-b py-2 text-gray-700 " >
+              <div key={index} className="flex flex-col sm:flex-row justify-between border-t border-b py-2 text-gray-700 " >
                   {/* image and description */}
                  <div className="flex gap-12">
                     <div>

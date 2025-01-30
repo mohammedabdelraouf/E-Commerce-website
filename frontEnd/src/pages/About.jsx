@@ -36,12 +36,12 @@ function About() {
           </div>
 
         </section>
-        <section className='px-16 sm:px-0'>
+        <section className='px-5 sm:px-0'>
           <div className='text-xl my-8'>
           <Title text1={'WHY'} text2={'CHOOSE US'} />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 ">
-            <div className="py-20 px-16 border">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-0 ">
+            <div className=" py-2 sm:py-20 px-5 sm:px-16 border">
               <p>
               QUALITY ASSURANCE:
               </p>
@@ -50,7 +50,7 @@ function About() {
                 incidunt, rerum sapiente delectus voluptatem.
               </p>
             </div>
-            <div className="py-20 px-16 border">
+            <div className=" py-2 sm:py-20 px-5 sm:px-16 border">
               <p>
               QUALITY ASSURANCE:
               </p>
@@ -59,7 +59,7 @@ function About() {
                 incidunt, rerum sapiente delectus voluptatem.
               </p>
             </div> 
-            <div className="py-20 px-16 border">
+            <div className=" py-2 sm:py-20 px-5 sm:px-16 border">
               <p>
               QUALITY ASSURANCE:
               </p>
