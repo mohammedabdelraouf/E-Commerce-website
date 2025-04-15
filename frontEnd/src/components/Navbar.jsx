@@ -37,12 +37,12 @@ const  Navbar = () => {
             <div className='flex items-center gap-6'>
                 <img onClick={()=>setShowSearch(true)} src={assets.search_icon}  className={`w-5 cursor-pointer ${location.pathname.includes('collection')? '': 'hidden'  }`} />
                 <div className='group relative'>
-                    <img onClick={()=>navigate('/login')} src={assets.profile_icon} className='w-5 cursor-pointer' alt="" />
+                    <img  src={assets.profile_icon} className='w-5 cursor-pointer' alt="" />
                     <div className='group-hover:block hidden absolute dropdown-menu right-0  pt-4'>
                         <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-600 rounded'>
                             <p onClick={()=>{navigate('/orders')}} className='cursor-pointer hover:text-black hover:font-bold'>My profile</p>
                             <p onClick={()=>{navigate('/orders')}} className='cursor-pointer hover:text-black hover:font-bold'>Orders</p>
-                            <p onClick={()=>{navigate('/orders')}} className='cursor-pointer hover:text-black hover:font-bold'>Logout </p>
+                            <p onClick={()=>{navigate('/login')}} className='cursor-pointer hover:text-black hover:font-bold'>Logout </p>
                         </div>
                     </div>
                 </div>
