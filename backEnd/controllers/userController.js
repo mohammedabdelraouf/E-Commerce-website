@@ -4,9 +4,11 @@ import jwt from "jsonwebtoken"
 import userModel from "../models/userModel.js";
 
 
-const creatToken = (id)=>{
+const creatUserToken = (id)=>{
  
-    return jwt.sign({id}, process.env.JWT_SECRET)
+    return jwt.sign({id,
+        role:"user"
+    }, process.env.JWT_SECRET)
 }
 
 const loginUser = async(req,res)=>{
@@ -19,20 +21,22 @@ const loginUser = async(req,res)=>{
             const isMatch = await bcrypt.compare(password , user.password);
             if(isMatch)
             {
-                const token = creatToken(user._id);
+                const token = creatUserToken(user._id);
                 return res.status(200).json({success:true , token})
             }
             else
             {
                 return res.status(400).json({
-                    msg:"wrong password" })
+                    success:false ,
+                    msg:"Wrong username or password" })
 
             }
 
         }
         else
         {
-            return res.status(400).json({
+            return res.status(500).json({
+                success:false ,
                 msg:"Email doesn't exist" })
         }
         
@@ -97,10 +101,13 @@ const registerUser = async(req,res)=>{
     }
 }
 
-//******************************************************************************** */
-const loginAdmin =async(req,res)=>{
-    res.json({msg:"loginAdmin api"})
-    
-}
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await userModel.find().select('-password'); // Exclude passwords
+        res.status(200).json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, msg: error.message });
+    }
+};
 
-export {loginAdmin, loginUser , registerUser};
+export { loginUser , registerUser , getAllUsers };

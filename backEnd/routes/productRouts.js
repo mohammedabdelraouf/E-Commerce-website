@@ -1,13 +1,34 @@
-import express from 'express'
+import express from 'express';
+import { uploadProductImages, handleMulterError } from '../middleware/multer.js';
+import {
+  listProducts,
+  singleProduct,
+  addProduct,
+  updateProduct,
+  removeProduct,
+  getBestsellers,
+  getProductsByCategory,
+  getCategories
+} from '../controllers/productController.js';
 
-// import functions
+const router = express.Router();
 
-const productRouter = new express.Router();
+router.route('/')
+  .get(listProducts)
+  .post(uploadProductImages, handleMulterError, addProduct);
 
-productRouter.post()
-productRouter.post()
-productRouter.post()
-productRouter.post()
+router.route('/bestsellers')
+  .get(getBestsellers);
 
+router.route('/categories/all')
+  .get(getCategories);
 
-export default productRouter;
+router.route('/category/:category')
+  .get(getProductsByCategory);
+
+router.route('/:id')
+  .get(singleProduct)
+  .put(updateProduct)
+  .delete(removeProduct);
+
+export default router;
