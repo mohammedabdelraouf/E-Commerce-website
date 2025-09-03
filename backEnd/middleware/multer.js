@@ -8,9 +8,6 @@ const __dirname = path.dirname(__filename);
 
 // Configure storage
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads/products/'));
-  },
   filename: function (req, file, cb) {
     // Create unique filename with timestamp
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -30,12 +27,20 @@ const fileFilter = (req, file, cb) => {
 
 // Configure multer
 const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit
-  },
-  fileFilter: fileFilter
+  storage: storage
 });
+
+
+const uploadFields = () => {
+  var fields = [
+    { name: 'image1', maxCount: 1 }
+    , { name: 'image2', maxCount: 1 }
+    , { name: 'image3', maxCount: 1 }
+    , { name: 'image4', maxCount: 1 }
+    , { name: 'image5', maxCount: 1 }
+  ];
+  return upload.fields(fields);
+};
 
 // Middleware to handle multiple image uploads
 const uploadProductImages = upload.array('images', 5); // Maximum 5 images
@@ -64,4 +69,4 @@ const handleMulterError = (err, req, res, next) => {
   next(err);
 };
 
-export { uploadProductImages, uploadSingleImage, handleMulterError };
+export { upload ,uploadFields,uploadProductImages, uploadSingleImage, handleMulterError };

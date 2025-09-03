@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadProductImages, handleMulterError } from '../middleware/multer.js';
+import { handleMulterError, uploadFields } from '../middleware/multer.js';
 import {
   listProducts,
   singleProduct,
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.route('/')
   .get(listProducts)
-  .post(uploadProductImages, handleMulterError, addProduct);
+  .post(uploadFields, handleMulterError, addProduct);
 
 router.route('/bestsellers')
   .get(getBestsellers);
