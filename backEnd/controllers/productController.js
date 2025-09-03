@@ -1,5 +1,105 @@
 import Product from "../models/productModel.js";
-import cloudinary from "../config/cloudinary.js";
+import cloudinary from '../config/cloudinary.js';
+
+
+// Utility function to normalize strings
+const normalizeString = (str) => (str ? str.trim() : str);
+
+// @desc    Add a new product
+// @route   POST /api/products
+// @access  Private/Admin
+const addProduct = async (req, res) => {
+  console.log("Received addProduct request");
+  let imagesUrl = []; // Initialize early to avoid reference errors
+
+  try {
+    const { name, description, price, category, subCategory, sizes, bestseller } = req.body;
+
+    console.log("Request body:", req.body);
+    // Collect uploaded images
+    const images = [
+      req.files?.image1?.[0],
+      req.files?.image2?.[0],
+      req.files?.image3?.[0],
+      req.files?.image4?.[0],
+      req.files?.image5?.[0],
+    ].filter(Boolean);
+    console.log(`Number of images received: ${images.length}`);
+    if (images.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one image is required",
+      });
+    }
+
+    console.log("Images to upload:", images.length);
+
+    // Upload images to Cloudinary
+    console.log("Starting upload to Cloudinary...");
+    imagesUrl = await Promise.all(
+      images.map(async (item) => {
+        console.log("Uploading:", item.path);
+        const result = await cloudinary.uploader.upload(item.path, {
+          resource_type: "image",
+        });
+        console.log("Uploaded:", result.secure_url);
+        return {
+          url: result.secure_url,
+          public_id: result.public_id,
+          secure_url: result.secure_url,
+        };
+      })
+    );
+    console.log("All uploads finished.");
+
+    // Parse sizes safely
+    let parsedSizes;
+    try {
+      parsedSizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes || "[]");
+    } catch (err) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sizes format. Must be a JSON array.",
+      });
+    }
+
+    // Create and save product
+    const product = new Product({
+      name,
+      description,
+      price: Number(price),
+      image: imagesUrl,
+      category,
+      subCategory,
+      sizes: parsedSizes,
+      bestseller: bestseller === "true" || bestseller === true,
+    });
+
+    const createdProduct = await product.save();
+    return res.status(201).json({
+      success: true,
+      createdProduct,
+    });
+
+  } catch (error) {
+    console.error("Error in addProduct:", error.message);
+
+    // Cleanup uploaded images
+    if (imagesUrl.length > 0) {
+      await Promise.all(
+        imagesUrl.map(async (image) => {
+          try {
+            await cloudinary.uploader.destroy(image.public_id);
+          } catch (deleteError) {
+            console.error("Error deleting image from Cloudinary:", deleteError);
+          }
+        })
+      );
+    }
+
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 
 // @desc    Get all products
@@ -76,160 +176,92 @@ const singleProduct = async (req, res) => {
   }
 };
 
-// @desc    Add a new product
-// @route   POST /api/products
+
+// ==========================================
+// @desc    Update a product
+// @route   PUT /api/products/:id
 // @access  Private/Admin
-const addProduct = async (req, res) => {
+// ==========================================
+const updateProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      category,
-      subCategory,
-      sizes,
-      bestseller,
-    } = req.body;
+    const { name, description, price, category, subCategory, sizes, bestseller } = req.body;
 
-    // Get files from request (assuming they're already uploaded to temp storage)
-    const image1 = req.files["image1"] ? req.files["image1"][0] : null;
-    const image2 = req.files["image2"] ? req.files["image2"][0] : null;
-    const image3 = req.files["image3"] ? req.files["image3"][0] : null;
-    const image4 = req.files["image4"] ? req.files["image4"][0] : null;
-    const image5 = req.files["image5"] ? req.files["image5"][0] : null;
-
-    images = [image1, image2, image3, image4, image5].filter(
-      (img) => img !== null
-    );
-    if (images.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "At least one image is required",
-      });
+    console.log("Request body for update:", req.body);
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
     }
-    // Upload each image to Cloudinary manually
-    let imagesUrl = await Promise.all(
-      images.map(async (item) => {
-        try {
-          const result = await cloudinary.uploader.upload(item.path, {
-            folder: "ecommerce-products",
-            transformation: [
-              { width: 800, height: 800, crop: "limit", quality: "auto" },
-              { format: "webp" },
-            ],
+
+    // Update basic fields
+    if (name) product.name = name.trim();
+    if (description) product.description = description.trim();
+    if (price) product.price = Number(price);
+    if (category) product.category = category.trim();
+    if (subCategory) product.subCategory = subCategory.trim();
+    if (sizes) {
+      product.sizes = Array.isArray(sizes) ? sizes : JSON.parse(sizes);
+    }
+    if (bestseller !== undefined) {
+      product.bestseller = bestseller === "true" || bestseller === true;
+    }
+
+    // Handle new image uploads
+    if (req.files && Object.keys(req.files).length > 0) {
+      // Delete old images from Cloudinary
+      for (const img of product.image) {
+        await cloudinary.uploader.destroy(img.public_id);
+      }
+
+      // Upload new images
+      const newImages = await Promise.all(
+        Object.values(req.files).flat().map(async (file) => {
+          const result = await cloudinary.uploader.upload(file.path, {
+            resource_type: "image",
           });
           return {
             url: result.secure_url,
             public_id: result.public_id,
             secure_url: result.secure_url,
           };
-        } catch (error) {
-          console.error("Cloudinary upload error:", error);
-          throw new Error(`Failed to upload image: ${item.originalname}`);
-        }
-      })
-    );
-
-    // Create product with the uploaded image URLs
-    const product = new Product({
-      name,
-      description,
-      price: Number(price),
-      image: imagesUrl,
-      category,
-      subCategory,
-      sizes: Array.isArray(sizes) ? sizes : JSON.parse(sizes || "[]"),
-      bestseller: bestseller === "true" || bestseller === true,
-    });
-
-    const createdProduct = await product.save();
-    res.status(201).json({
-      success: true,
-      createdProduct,
-    });
-  } catch (error) {
-    // Clean up any uploaded images if there's an error
-    if (imagesUrl && imagesUrl.length > 0) {
-      await Promise.all(
-        imagesUrl.map(async (image) => {
-          try {
-            await cloudinary.uploader.destroy(image.public_id);
-          } catch (deleteError) {
-            console.error("Error deleting image from Cloudinary:", deleteError);
-          }
         })
       );
+
+      product.image = newImages;
     }
-
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// @desc    Update a product
-// @route   PUT /api/products/:id
-// @access  Private/Admin
-const updateProduct = async (req, res) => {
-  try {
-    const {
-      name,
-      description,
-      price,
-      category,
-      subCategory,
-      sizes,
-      bestseller,
-    } = req.body;
-
-    const product = await Product.findById(req.params.id);
-
-    if (product) {
-      product.name = name || product.name;
-      product.description = description || product.description;
-      product.price = price ? Number(price) : product.price;
-      product.category = category || product.category;
-      product.subCategory = subCategory || product.subCategory;
-      product.sizes = sizes
-        ? Array.isArray(sizes)
-          ? sizes
-          : JSON.parse(sizes)
-        : product.sizes;
-      product.bestseller =
-        bestseller !== undefined
-          ? bestseller === "true" || bestseller === true
-          : product.bestseller;
-
-      // If new images are uploaded, update the image array
-      if (req.files && req.files.length > 0) {
-        const newImageUrls = getImageUrls(req);
-        product.image = newImageUrls;
-      }
-
-      const updatedProduct = await product.save();
-      res.json(updatedProduct);
-    } else {
-      res.status(404).json({ message: "Product not found" });
-    }
+    console.log("Updated product data:", product);
+    const updatedProduct = await product.save();
+    res.json({ success: true, product: updatedProduct });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error updating product:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
+
+// ==========================================
 // @desc    Delete a product
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
+// ==========================================
 const removeProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
-    if (product) {
-      // TODO: Add logic to delete associated image files from server
-      await Product.deleteOne({ _id: product._id });
-      res.json({ message: "Product removed" });
-    } else {
-      res.status(404).json({ message: "Product not found" });
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
     }
+
+    // Delete images from Cloudinary
+    for (const img of product.image) {
+      await cloudinary.uploader.destroy(img.public_id);
+    }
+
+    await Product.deleteOne({ _id: product._id });
+
+    res.json({ success: true, message: "Product removed" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error deleting product:", error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

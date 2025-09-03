@@ -1,5 +1,5 @@
 import express from 'express';
-import { handleMulterError, uploadFields } from '../middleware/multer.js';
+import {uploadFields} from '../middleware/multer.js';
 import {
   listProducts,
   singleProduct,
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.route('/')
   .get(listProducts)
-  .post(uploadFields, handleMulterError, addProduct);
+  .post(uploadFields, addProduct);
 
 router.route('/bestsellers')
   .get(getBestsellers);
@@ -28,7 +28,7 @@ router.route('/category/:category')
 
 router.route('/:id')
   .get(singleProduct)
-  .put(updateProduct)
+  .put(uploadFields,updateProduct)
   .delete(removeProduct);
 
 export default router;

@@ -14,16 +14,20 @@ const loginAdmin = async (req, res) => {
     // check if admin exist or not
     const admin = await adminModel.findOne({ email });
     if (admin) {
-      if (await bcrypt.compare(password, admin.password)) {
+      const validPass = await bcrypt.compare(password, admin.password);
+      if (validPass) {
         var token = creatAdminToken(admin);
         return res.status(200).json({ success: true, token });
-      } else {
+      } else 
+        {
         return res.status(400).json({
           success: false,
           msg: "Wrong username or password",
         });
       }
-    } else {
+    } 
+    else 
+      {
       return res.status(500).json({
         success: false,
         msg: "Email doesn't exist",
